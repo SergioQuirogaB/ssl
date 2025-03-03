@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koncilia SSL</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.min.css">
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header para monitor de certificados SSL con Tailwind -->
+    <header class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-md">
+        <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            
+            <!-- Sección del título y logo -->
+            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="M8 11l3 3 5-5"></path>
+            </svg>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-white">
+                Monitor de Certificados SSL
+                </h1>
+                <p class="text-sm md:text-base text-blue-100">
+                Supervisa el estado de tus certificados de seguridad
+                </p>
+            </div>
+            </div>
+    
+            <!-- Imagen encima de la sección de monitoreo -->
+                <div class="flex flex-col items-start space-y-2">
+                    <!-- <img src="{{ url_for('static', filename='includes/img/KonciliaLogo.png') }}" alt="Descripción de la imagen" class="w-64 h-6 object-cover rounded-full" /> -->
+                
+                    <!-- Sección de monitoreo y botón -->
+                    <div class="flex items-center space-x-4">
+                    <span class="flex items-center bg-blue-900 bg-opacity-50 text-blue-100 px-3 py-1 rounded-full text-sm">
+                        <span class="w-2 h-2 rounded-full bg-lime-400 mr-2"></span>
+                        Monitoreo activo
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>  
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row justify-between gap-4 mt-6 mb-6">
+            <div class="flex-grow">
+                <div class="flex">
+                    <input type="text" id="domainInput" class="w-96 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-s" placeholder="Ingrese el dominio">
+                    <button class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-md text-white px-4 py-2 rounded-r-md transition duration-200 flex items-center justify-center" onclick="addDomain()">
+                        <span class="text-white">Agregar</span>
+                    </button>
+                </div>                
+            </div>
+            <div>
+                <button class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2" onclick="downloadReport()">
+                   <strong>📄 PDF</strong>
+                </button>                
+            </div>
+        </div>
+
+        <!-- Buscador y filtros -->
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <div class="flex-grow">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="search" id="searchInput" class="block w-full p-2 pl-10 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar dominios...">
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <select id="statusFilter" class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                    <option value="all">Todos</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse" id="domainList">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-4 text-center text-sm font-bold w-16">Estado</th>
+                        <th class="p-4 text-center text-sm font-bold w-32">Dominio ⇅</th>
+                        <th class="p-4 text-center text-sm font-bold w-32">Válido desde ⇅</th>
+                        <th class="p-4 text-center text-sm font-bold w-32">Válido hasta ⇅</th>
+                        <th class="p-4 text-center text-sm font-bold w-28">Días rest. ⇅</th>
+                        <th class="p-4 text-center text-sm font-bold w-32">Últ. verif ⇅</th>
+                        <th class="p-4 text-center text-sm font-bold w-32">Observaciones</th>
+                        <th class="p-4 text-center text-sm font-bold w-2">Acción</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="text-gray-600 body-font">
+        <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
+            <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2025 Koncilia —
+                <a href="https://github.com/SergioQuirogaB" class="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">Versión.1.2</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Variable global para almacenar los datos de dominios
+        let domainsData = {};
+
+        function updateDomainList() {
+            fetch('/api/get_domains')
+                .then(response => response.json())
+                .then(domains => {
+                    // Guardar datos en variable global
+                    domainsData = domains;
+                    renderDomainList();
+                    
+                    // Disparar evento para notificar que la lista se ha actualizado
+                    document.dispatchEvent(new CustomEvent('domainListUpdated'));
+                })
+                .catch(error => console.error('Error fetching domains:', error));
+        }
+
+        function renderDomainList() {
+            const domainList = document.querySelector('#domainList tbody');
+            domainList.innerHTML = '';
+            
+            // Obtener filtros
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            for (const [domain, info] of Object.entries(domainsData)) {
+                // Aplicar filtro de búsqueda
+                if (searchTerm && !domain.toLowerCase().includes(searchTerm)) {
+                    continue;
+                }
+                
+                // Aplicar filtro de estado
+                if (statusFilter === 'online' && !info.has_ssl) {
+                    continue;
+                }
+                if (statusFilter === 'offline' && info.has_ssl) {
+                    continue;
+                }
+                
+                const row = document.createElement('tr');
+                row.className = "border-b hover:bg-gray-50 transition-colors";
+                
+                if (info.has_ssl) {
+                    row.innerHTML = `
+                        <td class="p-4 align-middle text-sm text-center"><span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-lime-500 text-white">Online</span></td>
+                        <td class="p-4 align-middle text-sm text-center">${domain}</td>
+                        <td class="p-4 align-middle text-sm text-center">${info.valid_from}</td>
+                        <td class="p-4 align-middle text-sm text-center">${info.valid_until}</td>
+                        <td class="p-4 align-middle text-center">
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                info.days_remaining <= 3 ? 'bg-red-200 text-red-800' :
+                                info.days_remaining <= 5 ? 'bg-orange-200 text-orange-800' :
+                                info.days_remaining <= 10 ? 'bg-yellow-200 text-yellow-800' :
+                                'bg-blue-200 text-blue-800'
+                            }">
+                                ${info.days_remaining} días
+                            </span>
+                            </td>
+                            <td class="p-4 align-middle text-sm text-gray-600 text-center">${info.last_check}</td>
+                            <td class="p-4 align-middle text-sm text-gray-600 text-center">
+                                <input 
+                                type="text" 
+                                class="border rounded px-2 py-1 text-sm text-gray-600 text-center" 
+                                onchange="updateNotes('${domain}', this.value)" 
+                                value="${info.note || ''}"
+                                />
+                            </td>
+                            <td class="p-4 align-middle flex items-center justify-center">
+                            <button onclick="confirmDelete('${domain}')" aria-label="Eliminar">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600 hover:text-red-700 transition duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> 
+                                    <polyline points="3 6 5 6 21 6"></polyline> 
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"></path> 
+                                    <line x1="10" y1="11" x2="10" y2="17"></line> 
+                                    <line x1="14" y1="11" x2="14" y2="17"></line> 
+                                </svg>
+                            </button>
+                        </td>
+                    `;
+                } else {
+                    row.innerHTML = `
+                        <td class="p-4 align-middle text-sm"><span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-500 text-white">Offline</span></td>
+                        <td class="p-4 align-middle text-sm text-center">${domain}</td>
+                        <td colspan="3" class="p-4 align-middle text-gray-700 text-sm"></td>
+                        <td class="p-4 align-middle text-sm text-gray-600 text-center">${info.last_check}</td>
+                        <td class="p-4 align-middle text-sm text-gray-600 text-center">
+                            <input 
+                            type="text" 
+                            class="border rounded px-2 py-1 text-sm text-gray-600 text-center" 
+                            onchange="updateNotes('${domain}', this.value)" 
+                            value="${info.note || ''}"
+                            />
+                        </td>
+                        <td class="p-4 align-middle">
+                            <button onclick="confirmDelete('${domain}')" aria-label="Eliminar">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600 hover:text-red-700 transition duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> 
+                                    <polyline points="3 6 5 6 21 6"></polyline> 
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"></path> 
+                                    <line x1="10" y1="11" x2="10" y2="17"></line> 
+                                    <line x1="14" y1="11" x2="14" y2="17"></line> 
+                                </svg>
+                            </button>
+                        </td>
+                    `;
+                }
+                domainList.appendChild(row);
+            }
+        }
+
+        // Cargar dominios guardados al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedDomains = JSON.parse(localStorage.getItem('monitoredDomains') || '[]');
+            
+            // Restaurar dominios guardados
+            savedDomains.forEach(domain => {
+                fetch('/api/add_domain', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ domain })
+                });
+            });
+
+            // Iniciar actualizaciones periódicas
+            updateDomainList();
+            setInterval(updateDomainList, 30000);
+            
+            // Configurar el ordenamiento de tabla
+            setupTableSorting();
+            
+            // Configurar eventos para filtros
+            document.getElementById('searchInput').addEventListener('input', renderDomainList);
+            document.getElementById('statusFilter').addEventListener('change', renderDomainList);
+        });
+
+        function addDomain() {
+            const domain = document.getElementById('domainInput').value.trim();
+            if (!domain) return;
+            
+            // Verificar duplicados antes de agregar
+            const savedDomains = JSON.parse(localStorage.getItem('monitoredDomains') || '[]');
+            
+            if (savedDomains.includes(domain)) {
+                Swal.fire({
+                    title: 'Dominio duplicado',
+                    text: `El dominio ${domain} ya está siendo monitoreado.`,
+                    icon: 'warning',
+                    confirmButtonColor: '#84CC16'
+                });
+                return;
+            }
+            
+            // Si no hay duplicados, guardar en localStorage y agregar
+            savedDomains.push(domain);
+            localStorage.setItem('monitoredDomains', JSON.stringify(savedDomains));
+
+            fetch('/api/add_domain', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ domain })
+            })
+            .then(response => response.json())
+            .then(() => {
+                document.getElementById('domainInput').value = '';
+                updateDomainList();
+                Swal.fire({
+                    title: 'Dominio agregado',
+                    text: `El dominio ${domain} ha sido agregado al monitoreo.`,
+                    icon: 'success',
+                    confirmButtonColor: '#84CC16',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }
+
+        // Función para confirmar la eliminación con SweetAlert
+        function confirmDelete(domain) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: `¿Deseas eliminar el dominio ${domain} del monitoreo?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#84CC16',
+                cancelButtonColor: '#E14A4A',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    removeDomain(domain);
+                    Swal.fire(
+                        '¡Eliminado!',
+                        `El dominio ${domain} ha sido eliminado del monitoreo.`,
+                        'success'
+                    );
+                }
+            });
+        }
+
+        function removeDomain(domain) {
+            // Eliminar del almacenamiento local antes de eliminar
+            const savedDomains = JSON.parse(localStorage.getItem('monitoredDomains') || '[]');
+            const updatedDomains = savedDomains.filter(d => d !== domain);
+            localStorage.setItem('monitoredDomains', JSON.stringify(updatedDomains));
+
+            fetch('/api/remove_domain', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ domain })
+            })
+            .then(() => updateDomainList());
+        }
+
+        function updateNotes(domain, value) {
+            fetch('/api/update_notes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ domain: domain, note: value })
+            })
+            .then(response => response.json())
+            .catch(error => console.error('Error actualizando nota:', error));
+        }
+
+        function downloadReport() {
+            fetch('/api/get_domains')
+                .then(response => response.json())
+                .then(domains => {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('p', 'mm', 'a4');
+
+                    // Agrega encabezado y el título
+                    doc.setFontSize(15);
+                    doc.setTextColor(12, 23, 145);
+                    doc.text('Reporte de Certificados SSL', 105, 20, { align: 'center' });
+                    
+                    // Agrega la fecha
+                    doc.setFontSize(10);
+                    doc.setTextColor(100);
+                    const date = new Date().toLocaleDateString('es-ES', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    doc.text(`Fecha del reporte: ${date}`, 105, 30, { align: 'center' });
+                    const pageWidth = doc.internal.pageSize.width; // Obtiene el ancho de la página
+                    const tableWidth = 190; // Ajusta según el total de las columnas
+                    const centerMargin = (pageWidth - tableWidth) / 2; // Calcula margen para centrar
+
+                    // Tabla del reporte
+                    doc.autoTable({
+                        startY: 35,
+                        head: [['Estado', 'Dominio', 'Desde', 'Hasta', 'Días', 'Últ. verif', 'Obs.']],
+                        body: Object.entries(domains).map(([domain, info]) => [
+                            info.has_ssl ? 'Online' : 'Offline',
+                            domain,
+                            info.valid_from || 'N/A',
+                            info.valid_until || 'N/A',
+                            `${info.days_remaining || 'N/A'} días`,
+                            info.last_check,
+                            info.note ? info.note : 'Sin Observaciones.'
+                        ]),
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: [41, 128, 185],
+                            textColor: 255,
+                            fontSize: 6,
+                            halign: 'center'
+                        },
+                        styles: {
+                            fontSize: 6,
+                            cellPadding: 2,
+                            overflow: 'linebreak',
+                            halign: 'center' // 🔹 Centra el contenido de todas las celdas
+                        },
+                        columnStyles: {
+                            0: { cellWidth: 15, halign: 'center' },
+                            1: { cellWidth: 50, halign: 'center' }, 
+                            2: { cellWidth: 15, halign: 'center' }, 
+                            3: { cellWidth: 15, halign: 'center' }, 
+                            4: { cellWidth: 15, halign: 'center' }, 
+                            5: { cellWidth: 20, halign: 'center' },
+                            6: { cellWidth: 50, halign: 'center' }  
+                        },
+                        margin: { left: centerMargin, top: 40 } // Centra la tabla
+                    });
+
+                    // Add summary
+                    const totalDomains = Object.keys(domains).length;
+                    const validDomains = Object.values(domains).filter(info => info.has_ssl).length;
+                    const expiringDomains = Object.values(domains).filter(info => info.days_remaining <= 30 && info.has_ssl).length;
+
+                    const finalY = doc.lastAutoTable.finalY + 10;
+                    doc.setFontSize(8);
+                    doc.setTextColor(44, 62, 80);
+                    doc.text('Resumen:', 14, finalY);
+                    doc.setFontSize(8);
+                    doc.text([
+                        `• Total de dominios monitoreados: ${totalDomains}`,
+                        `• Dominios con SSL válido: ${validDomains}`,
+                        `• Dominios por vencer (30 días o menos): ${expiringDomains}`
+                    ], 20, finalY + 7);
+
+                    // Save PDF
+                    doc.save(`reporte_ssl_${new Date().toISOString().split('T')[0]}.pdf`);
+                });
+        }
+
+        // Agregar detector de eventos para la tecla Enter
+        document.getElementById('domainInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addDomain();
+            }
+        });
+
+        // Función para configurar el ordenamiento de tabla persistente
+        function setupTableSorting() {
+            const table = document.getElementById("domainList");
+            const headers = table.querySelectorAll("th");
+            const tbody = table.querySelector("tbody");
+
+            // Recuperar estado del ordenamiento desde localStorage
+            const savedSort = JSON.parse(localStorage.getItem("tableSort")) || {};
+
+            // Aplicar el ordenamiento guardado al cargar la página
+            if (savedSort.index !== undefined && savedSort.order) {
+                // Marcar visualmente el encabezado con la dirección de ordenamiento
+                headers[savedSort.index].dataset.order = savedSort.order;
+                updateSortIndicators(headers, savedSort.index);
+            }
+
+            // Configurar listeners para los encabezados
+            headers.forEach((header, index) => {
+                header.addEventListener("click", () => {
+                    // Alternar el orden: si no existe, establecer ascendente, si es ascendente cambiar a descendente, etc.
+                    const currentOrder = header.dataset.order || '';
+                    const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+                    
+                    // Actualizar el atributo de datos para el encabezado
+                    header.dataset.order = newOrder;
+                    
+                    // Guardar estado en localStorage para persistencia
+                    localStorage.setItem("tableSort", JSON.stringify({ index, order: newOrder }));
+                    
+                    // Aplicar el ordenamiento a la tabla
+                    sortTable(tbody, index, newOrder);
+                    
+                    // Actualizar indicadores visuales
+                    updateSortIndicators(headers, index);
+                });
+            });
+
+            // Escuchar actualizaciones de la lista de dominios para reordenar después
+            document.addEventListener('domainListUpdated', function() {
+                if (savedSort.index !== undefined && savedSort.order) {
+                    setTimeout(() => {
+                        sortTable(tbody, savedSort.index, savedSort.order);
+                    }, 100);
+                }
+            });
+        }
+
+        // Actualizar los indicadores visuales de ordenamiento
+        function updateSortIndicators(headers, activeIndex) {
+            headers.forEach((header, index) => {
+                // Preservar texto original (sin indicadores)
+                const originalText = header.textContent.replace(' ⇅', '').replace(' ↑', '').replace(' ↓', '');
+                
+                if (index === activeIndex) {
+                    const order = header.dataset.order;
+                    header.textContent = originalText + (order === 'asc' ? ' ↑' : ' ↓');
+                } else {
+                    // Restaurar indicador neutral para encabezados que lo tenían originalmente
+                    if (originalText.includes('Dominio') || 
+                        originalText.includes('Válido desde') || 
+                        originalText.includes('Válido hasta') || 
+                        originalText.includes('Días rest') || 
+                        originalText.includes('Últ. verif')) {
+                        header.textContent = originalText + ' ⇅';
+                    } else {
+                        header.textContent = originalText;
+                    }
+                }
+            });
+        }
+
+        // Función para ordenar la tabla
+        function sortTable(tbody, index, order) {
+            const rows = Array.from(tbody.querySelectorAll("tr"));
+            
+            rows.sort((rowA, rowB) => {
+                // Manejar caso especial para filas sin certificado SSL
+                if (!rowA.children[index] || !rowB.children[index]) {
+                    return 0;
+                }
+                
+                const cellA = rowA.children[index].textContent.trim();
+                const cellB = rowB.children[index].textContent.trim();
+                
+                return order === "asc" ? compareValues(cellA, cellB) : compareValues(cellB, cellA);
+            });
+
+            // Vaciar y reconstruir la tabla ordenada
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Función para comparar valores (numéricos o texto)
+        function compareValues(a, b) {
+            // Extraer números de textos como "X días"
+            if (a.includes('días') && b.includes('días')) {
+                const numA = parseInt(a.match(/\d+/)[0]);
+                const numB = parseInt(b.match(/\d+/)[0]);
+                return numA - numB;
+            }
+            
+            // Comparar fechas
+            if (isDate(a) && isDate(b)) {
+                return new Date(a) - new Date(b);
+            }
+            
+            // Valores numéricos
+            if (!isNaN(parseFloat(a)) && !isNaN(parseFloat(b))) {
+                return parseFloat(a) - parseFloat(b);
+            }
+            
+            // Ordenar texto normalmente
+            return a.localeCompare(b, undefined, { numeric: true });
+        }
+
+        // Función auxiliar para detectar fechas
+        function isDate(value) {
+            // Verifica patrones comunes de fecha como DD/MM/YYYY o YYYY-MM-DD
+            return /^\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}$/.test(value) || 
+                   /^\d{4}[/.-]\d{1,2}[/.-]\d{1,2}$/.test(value);
+        }
+    </script>
+</body>
+</html>
