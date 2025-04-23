@@ -10,6 +10,10 @@
     <!-- SweetAlert2 CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2canvas para convertir gráficos a imágenes -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body class="bg-gray-50">
 
@@ -110,7 +114,7 @@
     <footer class="text-gray-600 body-font">
         <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
             <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2025 Koncilia —
-                <a href="https://github.com/SergioQuirogaB" class="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">Versión.1.2</a>
+                <a href="https://github.com/SergioQuirogaB" class="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">Versión. 3.0</a>
             </p>
         </div>
     </footer>
@@ -140,6 +144,9 @@
             // Obtener filtros
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const statusFilter = document.getElementById('statusFilter').value;
+            
+            // Obtener notas guardadas
+            const savedNotes = JSON.parse(localStorage.getItem('domainNotes') || '{}');
             
             for (const [domain, info] of Object.entries(domainsData)) {
                 // Aplicar filtro de búsqueda
@@ -180,7 +187,7 @@
                                 type="text" 
                                 class="border rounded px-2 py-1 text-sm text-gray-600 text-center" 
                                 onchange="updateNotes('${domain}', this.value)" 
-                                value="${info.note || ''}"
+                                value="${savedNotes[domain] || info.note || ''}"
                                 />
                             </td>
                             <td class="p-4 align-middle flex items-center justify-center">
@@ -205,7 +212,7 @@
                             type="text" 
                             class="border rounded px-2 py-1 text-sm text-gray-600 text-center" 
                             onchange="updateNotes('${domain}', this.value)" 
-                            value="${info.note || ''}"
+                            value="${savedNotes[domain] || info.note || ''}"
                             />
                         </td>
                         <td class="p-4 align-middle">
@@ -224,6 +231,31 @@
             }
         }
 
+        // Función para actualizar la vista en tiempo real
+        function startRealTimeUpdates() {
+            // Actualizar cada 15 minutos (900000 ms)
+            setInterval(updateDomainList, 900000);
+            
+            // Actualizar cada minuto para el campo "Últ. Verif"
+            setInterval(() => {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('es-ES', { 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                });
+                
+                // Actualizar solo el campo "Últ. Verif" en todas las filas
+                const rows = document.querySelectorAll('#domainList tbody tr');
+                rows.forEach(row => {
+                    const lastCheckCell = row.querySelector('td:nth-child(6)');
+                    if (lastCheckCell) {
+                        lastCheckCell.textContent = timeString;
+                    }
+                });
+            }, 120000); // Actualizar vista de Ult. Verif cada 2 mins 
+        }
+
         // Cargar dominios guardados al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             const savedDomains = JSON.parse(localStorage.getItem('monitoredDomains') || '[]');
@@ -239,9 +271,9 @@
                 });
             });
 
-            // Iniciar actualizaciones periódicas
+            // Iniciar actualizaciones
             updateDomainList();
-            setInterval(updateDomainList, 30000);
+            startRealTimeUpdates();
             
             // Configurar el ordenamiento de tabla
             setupTableSorting();
@@ -323,6 +355,11 @@
             const updatedDomains = savedDomains.filter(d => d !== domain);
             localStorage.setItem('monitoredDomains', JSON.stringify(updatedDomains));
 
+            // Eliminar también la nota asociada
+            const savedNotes = JSON.parse(localStorage.getItem('domainNotes') || '{}');
+            delete savedNotes[domain];
+            localStorage.setItem('domainNotes', JSON.stringify(savedNotes));
+
             fetch('/api/remove_domain', {
                 method: 'POST',
                 headers: {
@@ -334,6 +371,12 @@
         }
 
         function updateNotes(domain, value) {
+            // Guardar la observación en localStorage
+            const savedNotes = JSON.parse(localStorage.getItem('domainNotes') || '{}');
+            savedNotes[domain] = value;
+            localStorage.setItem('domainNotes', JSON.stringify(savedNotes));
+
+            // Enviar al servidor
             fetch('/api/update_notes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -366,66 +409,209 @@
                         minute: '2-digit'
                     });
                     doc.text(`Fecha del reporte: ${date}`, 105, 30, { align: 'center' });
-                    const pageWidth = doc.internal.pageSize.width; // Obtiene el ancho de la página
-                    const tableWidth = 190; // Ajusta según el total de las columnas
-                    const centerMargin = (pageWidth - tableWidth) / 2; // Calcula margen para centrar
 
-                    // Tabla del reporte
-                    doc.autoTable({
-                        startY: 35,
-                        head: [['Estado', 'Dominio', 'Desde', 'Hasta', 'Días', 'Últ. verif', 'Obs.']],
-                        body: Object.entries(domains).map(([domain, info]) => [
-                            info.has_ssl ? 'Online' : 'Offline',
-                            domain,
-                            info.valid_from || 'N/A',
-                            info.valid_until || 'N/A',
-                            `${info.days_remaining || 'N/A'} días`,
-                            info.last_check,
-                            info.note ? info.note : 'Sin Observaciones.'
-                        ]),
-                        theme: 'grid',
-                        headStyles: {
-                            fillColor: [41, 128, 185],
-                            textColor: 255,
-                            fontSize: 6,
-                            halign: 'center'
+                    // Crear contenedores para los gráficos
+                    const canvasContainer = document.createElement('div');
+                    canvasContainer.style.position = 'absolute';
+                    canvasContainer.style.left = '-9999px';
+                    canvasContainer.style.width = '800px';
+                    canvasContainer.style.height = '400px';
+                    document.body.appendChild(canvasContainer);
+
+                    // Crear gráfico de estados
+                    const statusCanvas = document.createElement('canvas');
+                    statusCanvas.width = 400;
+                    statusCanvas.height = 200;
+                    canvasContainer.appendChild(statusCanvas);
+
+                    const statusCtx = statusCanvas.getContext('2d');
+                    const validDomains = Object.values(domains).filter(info => info.has_ssl).length;
+                    const invalidDomains = Object.values(domains).filter(info => !info.has_ssl).length;
+
+                    const statusChart = new Chart(statusCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Online', 'Offline'],
+                            datasets: [{
+                                data: [validDomains, invalidDomains],
+                                backgroundColor: ['#1E40AF', '#93C5FD'],
+                                borderWidth: 1
+                            }]
                         },
-                        styles: {
-                            fontSize: 6,
-                            cellPadding: 2,
-                            overflow: 'linebreak',
-                            halign: 'center' // 🔹 Centra el contenido de todas las celdas
-                        },
-                        columnStyles: {
-                            0: { cellWidth: 15, halign: 'center' },
-                            1: { cellWidth: 50, halign: 'center' }, 
-                            2: { cellWidth: 15, halign: 'center' }, 
-                            3: { cellWidth: 15, halign: 'center' }, 
-                            4: { cellWidth: 15, halign: 'center' }, 
-                            5: { cellWidth: 20, halign: 'center' },
-                            6: { cellWidth: 50, halign: 'center' }  
-                        },
-                        margin: { left: centerMargin, top: 40 } // Centra la tabla
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Distribución de Estados SSL',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        }
                     });
 
-                    // Add summary
-                    const totalDomains = Object.keys(domains).length;
-                    const validDomains = Object.values(domains).filter(info => info.has_ssl).length;
-                    const expiringDomains = Object.values(domains).filter(info => info.days_remaining <= 30 && info.has_ssl).length;
+                    // Crear gráfico de días restantes
+                    const daysCanvas = document.createElement('canvas');
+                    daysCanvas.width = 400;
+                    daysCanvas.height = 200;
+                    canvasContainer.appendChild(daysCanvas);
 
-                    const finalY = doc.lastAutoTable.finalY + 10;
-                    doc.setFontSize(8);
-                    doc.setTextColor(44, 62, 80);
-                    doc.text('Resumen:', 14, finalY);
-                    doc.setFontSize(8);
-                    doc.text([
-                        `• Total de dominios monitoreados: ${totalDomains}`,
-                        `• Dominios con SSL válido: ${validDomains}`,
-                        `• Dominios por vencer (30 días o menos): ${expiringDomains}`
-                    ], 20, finalY + 7);
+                    const daysCtx = daysCanvas.getContext('2d');
+                    const daysData = Object.values(domains)
+                        .filter(info => info.has_ssl)
+                        .map(info => info.days_remaining)
+                        .sort((a, b) => a - b);
 
-                    // Save PDF
-                    doc.save(`reporte_ssl_${new Date().toISOString().split('T')[0]}.pdf`);
+                    const daysChart = new Chart(daysCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: Array(daysData.length).fill(''),
+                            datasets: [{
+                                label: 'Días Restantes',
+                                data: daysData,
+                                backgroundColor: daysData.map(days => 
+                                    days <= 3 ? '#1E40AF' :
+                                    days <= 5 ? '#3B82F6' :
+                                    days <= 10 ? '#60A5FA' :
+                                    '#93C5FD'
+                                ),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Días Restantes por Certificado',
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Certificados',
+                                        font: {
+                                            size: 12,
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Esperar a que los gráficos se rendericen completamente
+                    setTimeout(() => {
+                        // Convertir gráficos a imágenes y agregarlos al PDF
+                        Promise.all([
+                            html2canvas(statusCanvas, {
+                                scale: 2,
+                                useCORS: true,
+                                backgroundColor: '#ffffff'
+                            }),
+                            html2canvas(daysCanvas, {
+                                scale: 2,
+                                useCORS: true,
+                                backgroundColor: '#ffffff'
+                            })
+                        ]).then(([statusImage, daysImage]) => {
+                            // Calcular posiciones centradas para los gráficos
+                            const pageWidth = doc.internal.pageSize.width;
+                            const graphWidth = 95;
+                            const graphHeight = 47.5;
+                            const leftMargin = (pageWidth - (graphWidth * 2 + 10)) / 2 - 15;
+
+                            // Agregar gráfico de estados
+                            doc.addImage(statusImage.toDataURL('image/png'), 'PNG', leftMargin, 40, graphWidth, graphHeight);
+                            
+                            // Agregar gráfico de días restantes
+                            doc.addImage(daysImage.toDataURL('image/png'), 'PNG', leftMargin + graphWidth + 10, 40, graphWidth, graphHeight);
+
+                            // Tabla del reporte
+                            const tableWidth = 190;
+                            const centerMargin = (pageWidth - tableWidth) / 2;
+
+                            // Obtener el orden actual de la tabla
+                            const tableRows = Array.from(document.querySelectorAll('#domainList tbody tr'));
+                            const orderedData = tableRows.map(row => {
+                                const domain = row.querySelector('td:nth-child(2)').textContent;
+                                const info = domains[domain];
+                                return [
+                                    info.has_ssl ? 'Online' : 'Offline',
+                                    domain,
+                                    info.valid_from || 'N/A',
+                                    info.valid_until || 'N/A',
+                                    `${info.days_remaining || 'N/A'} días`,
+                                    info.last_check,
+                                    info.note ? info.note : 'Sin Observaciones.'
+                                ];
+                            });
+
+                            doc.autoTable({
+                                startY: 95,
+                                head: [['Estado', 'Dominio', 'Desde', 'Hasta', 'Días', 'Últ. verif', 'Obs.']],
+                                body: orderedData,
+                                theme: 'grid',
+                                headStyles: {
+                                    fillColor: [41, 128, 185],
+                                    textColor: 255,
+                                    fontSize: 6,
+                                    halign: 'center'
+                                },
+                                styles: {
+                                    fontSize: 6,
+                                    cellPadding: 2,
+                                    overflow: 'linebreak',
+                                    halign: 'center'
+                                },
+                                columnStyles: {
+                                    0: { cellWidth: 15, halign: 'center' },
+                                    1: { cellWidth: 50, halign: 'center' }, 
+                                    2: { cellWidth: 15, halign: 'center' }, 
+                                    3: { cellWidth: 15, halign: 'center' }, 
+                                    4: { cellWidth: 15, halign: 'center' }, 
+                                    5: { cellWidth: 20, halign: 'center' },
+                                    6: { cellWidth: 50, halign: 'center' }  
+                                },
+                                margin: { left: centerMargin, top: 40 }
+                            });
+
+                            // Add summary
+                            const totalDomains = Object.keys(domains).length;
+                            const validDomains = Object.values(domains).filter(info => info.has_ssl).length;
+                            const expiringDomains = Object.values(domains).filter(info => info.days_remaining <= 30 && info.has_ssl).length;
+
+                            const finalY = doc.lastAutoTable.finalY + 10;
+                            doc.setFontSize(8);
+                            doc.setTextColor(44, 62, 80);
+                            doc.text('Resumen:', 14, finalY);
+                            doc.setFontSize(8);
+                            doc.text([
+                                `• Total de dominios monitoreados: ${totalDomains}`,
+                                `• Dominios con SSL válido: ${validDomains}`,
+                                `• Dominios por vencer (30 días o menos): ${expiringDomains}`
+                            ], 20, finalY + 7);
+
+                            // Limpiar contenedores de canvas
+                            document.body.removeChild(canvasContainer);
+
+                            // Save PDF
+                            doc.save(`reporte_ssl_${new Date().toISOString().split('T')[0]}.pdf`);
+                        });
+                    }, 1000); // Esperar 1 segundo para que los gráficos se rendericen
                 });
         }
 

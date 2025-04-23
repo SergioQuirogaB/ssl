@@ -10,8 +10,12 @@ import OpenSSL.crypto as crypto
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import pytz
 
 DATA_FILE = 'data.json'  # Archivo donde se guardan los dominios
+CACHE_DURATION = 300  # 5 minutos de caché
+MAX_WORKERS = 10  # Número máximo de hilos para verificación paralela
 
 app = Flask(__name__)
 
@@ -20,6 +24,8 @@ class DomainMonitor:
         self.domains = {}
         self.alert_days = [10, 5, 3]
         self.alerts_sent = {}
+        self.cache = {}
+        self.cache_timestamp = {}
 
         # Configuración de email con variables de entorno
         self.email_config = {
@@ -30,6 +36,71 @@ class DomainMonitor:
 
         # Cargar dominios desde archivo JSON
         self.load_domains()
+        
+        # Iniciar el hilo de notificaciones programadas
+        self.start_scheduled_notifications()
+
+    def start_scheduled_notifications(self):
+        """Inicia el hilo para enviar notificaciones programadas"""
+        def notification_thread():
+            while True:
+                now = datetime.datetime.now(pytz.timezone('America/Bogota'))
+                if now.hour == 9 and now.minute == 0:
+                    self.send_daily_report()
+                time.sleep(60)  # Verificar cada minuto
+
+        thread = threading.Thread(target=notification_thread, daemon=True)
+        thread.start()
+
+    def send_daily_report(self):
+        """Envía un reporte diario de todos los dominios"""
+        try:
+            msg = MIMEMultipart()
+            msg['From'] = self.email_config['sender']
+            msg['To'] = self.email_config['recipient']
+            msg['Subject'] = '📊 Reporte Diario de Certificados SSL'
+
+            # Preparar el cuerpo del email
+            total_domains = len(self.domains)
+            online_domains = sum(1 for info in self.domains.values() if info.get('has_ssl'))
+            expiring_domains = sum(1 for info in self.domains.values() 
+                                 if info.get('has_ssl') and info.get('days_remaining', 0) <= 30)
+
+            body = f"""
+            <h2>📊 Reporte Diario de Certificados SSL</h2>
+            <p>Fecha: {datetime.datetime.now(pytz.timezone('America/Bogota')).strftime('%d/%m/%Y %H:%M')}</p>
+            
+            <h3>Resumen:</h3>
+            <ul>
+                <li>Total de dominios monitoreados: {total_domains}</li>
+                <li>Dominios con SSL válido: {online_domains}</li>
+                <li>Dominios por vencer (30 días o menos): {expiring_domains}</li>
+            </ul>
+
+            <h3>Dominios por vencer:</h3>
+            <ul>
+            """
+
+            # Agregar dominios por vencer al reporte
+            for domain, info in self.domains.items():
+                if info.get('has_ssl') and info.get('days_remaining', 0) <= 30:
+                    body += f"<li>{domain}: {info.get('days_remaining')} días restantes</li>"
+
+            body += """
+            </ul>
+            """
+
+            msg.attach(MIMEText(body, 'html'))
+
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(self.email_config['sender'], self.email_config['password'])
+                server.send_message(msg)
+
+            print("✅ Reporte diario enviado")
+
+        except Exception as e:
+            print(f"❌ Error enviando reporte diario: {e}")
 
     def save_domains(self):
         """Guarda los dominios en un archivo JSON"""
@@ -91,10 +162,17 @@ class DomainMonitor:
             self.send_alert_email(domain, days_remaining)
 
     def get_certificate_info(self, domain):
-        """Obtiene la información SSL del dominio"""
+        """Obtiene la información SSL del dominio con caché"""
+        # Verificar caché
+        current_time = time.time()
+        if (domain in self.cache and 
+            domain in self.cache_timestamp and 
+            current_time - self.cache_timestamp[domain] < CACHE_DURATION):
+            return self.cache[domain]
+
         try:
             context = ssl.create_default_context()
-            with socket.create_connection((domain, 443), timeout=10) as sock:
+            with socket.create_connection((domain, 443), timeout=5) as sock:  # Reducido a 5 segundos
                 with context.wrap_socket(sock, server_hostname=domain) as ssock:
                     cert_binary = ssock.getpeercert(binary_form=True)
                     x509 = crypto.load_certificate(crypto.FILETYPE_ASN1, cert_binary)
@@ -102,9 +180,7 @@ class DomainMonitor:
                     expiry_date = datetime.datetime.strptime(x509.get_notAfter().decode(), '%Y%m%d%H%M%SZ')
                     days_remaining = (expiry_date - datetime.datetime.now()).days
 
-                    self.check_and_send_alerts(domain, days_remaining)
-
-                    return {
+                    result = {
                         'status': 'Online',
                         'has_ssl': True,
                         'common_name': dict(x509.get_subject().get_components()).get(b'CN', b'').decode(),
@@ -113,15 +189,45 @@ class DomainMonitor:
                         'days_remaining': days_remaining,
                         'last_check': datetime.datetime.now().strftime('%H:%M:%S')
                     }
+
+                    # Actualizar caché
+                    self.cache[domain] = result
+                    self.cache_timestamp[domain] = current_time
+
+                    return result
+
         except Exception as e:
             print(f"❌ Error en {domain}: {e}")
+            result = {
+                'status': 'Offline',
+                'has_ssl': False,
+                'error': 'No se pudo obtener el certificado.',
+                'last_check': datetime.datetime.now().strftime('%H:%M:%S')
+            }
+            # Actualizar caché incluso para errores
+            self.cache[domain] = result
+            self.cache_timestamp[domain] = current_time
+            return result
 
-        return {
-            'status': 'Offline',
-            'has_ssl': False,
-            'error': 'No se pudo obtener el certificado.',
-            'last_check': datetime.datetime.now().strftime('%H:%M:%S')
-        }
+    def update_domains_parallel(self):
+        """Actualiza la información de los dominios en paralelo"""
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            # Crear un diccionario de futuros
+            future_to_domain = {
+                executor.submit(self.get_certificate_info, domain): domain 
+                for domain in self.domains.keys()
+            }
+
+            # Procesar resultados a medida que se completan
+            for future in as_completed(future_to_domain):
+                domain = future_to_domain[future]
+                try:
+                    result = future.result()
+                    self.domains[domain] = result
+                except Exception as e:
+                    print(f"❌ Error procesando {domain}: {e}")
+
+        self.save_domains()
 
 monitor = DomainMonitor()
 
@@ -185,12 +291,8 @@ def update_domains():
     """Actualiza periódicamente la información de los dominios"""
     while True:
         print("🔄 Actualizando dominios...")
-        for domain in list(monitor.domains.keys()):
-            if monitor.domains[domain].get('status') == 'Offline':
-                continue  # Evita reconsultar dominios que han fallado antes
-            monitor.domains[domain] = monitor.get_certificate_info(domain)
-        monitor.save_domains()  
-        time.sleep(3600)  
+        monitor.update_domains_parallel()
+        time.sleep(300)  # 5 minutos
 
 if __name__ == '__main__':
     threading.Thread(target=update_domains, daemon=True).start()
