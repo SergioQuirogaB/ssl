@@ -1,0 +1,182 @@
+2025-04-25 15:12:07,366 - __main__ - INFO - Hilo de notificaciones iniciado
+2025-04-25 15:12:07,368 - __main__ - INFO - DomainMonitor inicializado correctamente
+2025-04-25 15:12:08,036 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm10.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:08,037 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm10.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:08,277 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm18.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:08,354 - werkzeug - INFO -  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2025-04-25 15:12:08,404 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm18.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:08,705 - __main__ - WARNING - Error SSL al verificar certificado para skitrm2.eastus2.cloudapp.azure.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1028)
+2025-04-25 15:12:08,773 - __main__ - WARNING - Error SSL al verificar certificado para skitrm2.eastus2.cloudapp.azure.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1028)
+2025-04-25 15:12:09,161 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm28.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:09,203 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm28.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:09,297 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm30.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:09,297 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm30.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:09,727 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm32.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:09,728 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm32.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:13,219 - __main__ - WARNING - Timeout al verificar certificado para skitrm17.southcentralus.cloudapp.azure.com
+2025-04-25 15:12:13,265 - __main__ - WARNING - Timeout al verificar certificado para skitrm14.eastus2.cloudapp.azure.com
+2025-04-25 15:12:13,265 - __main__ - WARNING - Timeout al verificar certificado para skitrm14.eastus2.cloudapp.azure.com
+2025-04-25 15:12:13,327 - __main__ - WARNING - Timeout al verificar certificado para skitrm17.southcentralus.cloudapp.azure.com
+2025-04-25 15:12:13,451 - __main__ - WARNING - Timeout al verificar certificado para skitrm21.eastus2.cloudapp.azure.com
+2025-04-25 15:12:13,482 - __main__ - WARNING - Timeout al verificar certificado para skitrm21.eastus2.cloudapp.azure.com
+2025-04-25 15:12:13,532 - __main__ - WARNING - Timeout al verificar certificado para skitrm22.eastus2.cloudapp.azure.com
+2025-04-25 15:12:13,582 - __main__ - WARNING - Timeout al verificar certificado para skitrm22.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,050 - __main__ - WARNING - Timeout al verificar certificado para skitrm24.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,050 - __main__ - WARNING - Timeout al verificar certificado para skitrm25.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,128 - __main__ - WARNING - Timeout al verificar certificado para skitrm25.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,128 - __main__ - WARNING - Timeout al verificar certificado para skitrm24.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,187 - __main__ - WARNING - Timeout al verificar certificado para skitrm26.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,187 - __main__ - WARNING - Timeout al verificar certificado para skitrm27.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,187 - __main__ - WARNING - Timeout al verificar certificado para skitrm26.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,189 - __main__ - WARNING - Timeout al verificar certificado para skitrm27.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,418 - __main__ - WARNING - Timeout al verificar certificado para skitrm31.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,419 - __main__ - WARNING - Timeout al verificar certificado para skitrm31.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,870 - __main__ - ERROR - Error en notification_thread: descriptor 'time' for 'datetime.datetime' objects doesn't apply to a 'int' object
+2025-04-25 15:12:14,972 - __main__ - WARNING - Timeout al verificar certificado para skitrm34.eastus2.cloudapp.azure.com
+2025-04-25 15:12:14,973 - __main__ - WARNING - Timeout al verificar certificado para skitrm34.eastus2.cloudapp.azure.com
+2025-04-25 15:12:18,377 - __main__ - WARNING - Timeout al verificar certificado para skitrm35.eastus2.cloudapp.azure.com
+2025-04-25 15:12:18,377 - __main__ - WARNING - Timeout al verificar certificado para skitrm35.eastus2.cloudapp.azure.com
+2025-04-25 15:12:18,687 - __main__ - WARNING - Timeout al verificar certificado para skitrm39-dev.eastus2.cloudapp.azure.com
+2025-04-25 15:12:18,688 - __main__ - WARNING - Timeout al verificar certificado para skitrm39-dev.eastus2.cloudapp.azure.com
+2025-04-25 15:12:18,858 - __main__ - WARNING - Timeout al verificar certificado para skitrm40.eastus2.cloudapp.azure.com
+2025-04-25 15:12:18,859 - __main__ - WARNING - Timeout al verificar certificado para skitrm40.eastus2.cloudapp.azure.com
+2025-04-25 15:12:19,417 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm8.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:19,475 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm8.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:19,597 - __main__ - WARNING - Timeout al verificar certificado para skitrm41.eastus2.cloudapp.azure.com
+2025-04-25 15:12:19,598 - __main__ - WARNING - Timeout al verificar certificado para skitrm41.eastus2.cloudapp.azure.com
+2025-04-25 15:12:19,631 - __main__ - WARNING - Timeout al verificar certificado para skitrm45.eastus2.cloudapp.azure.com
+2025-04-25 15:12:19,631 - __main__ - WARNING - Timeout al verificar certificado para skitrm45.eastus2.cloudapp.azure.com
+2025-04-25 15:12:19,631 - __main__ - WARNING - Timeout al verificar certificado para skitrm46.eastus2.cloudapp.azure.com
+2025-04-25 15:12:19,722 - __main__ - WARNING - Timeout al verificar certificado para skitrm46.eastus2.cloudapp.azure.com
+2025-04-25 15:12:20,067 - __main__ - ERROR - Error inesperado al verificar certificado para admctasdb.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:20,068 - __main__ - ERROR - Error inesperado al verificar certificado para admctasdb.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:12:20,155 - __main__ - WARNING - Timeout al verificar certificado para skitrm47.eastus2.cloudapp.azure.com
+2025-04-25 15:12:20,155 - __main__ - WARNING - Timeout al verificar certificado para skitrm49.southcentralus.cloudapp.azure.com
+2025-04-25 15:12:20,155 - __main__ - WARNING - Timeout al verificar certificado para skitrm47.eastus2.cloudapp.azure.com
+2025-04-25 15:12:20,156 - __main__ - WARNING - Timeout al verificar certificado para skitrm49.southcentralus.cloudapp.azure.com
+2025-04-25 15:12:20,194 - __main__ - WARNING - Timeout al verificar certificado para skitrm50.eastus2.cloudapp.azure.com
+2025-04-25 15:12:20,215 - __main__ - WARNING - Timeout al verificar certificado para skitrm50.eastus2.cloudapp.azure.com
+2025-04-25 15:12:20,383 - __main__ - ERROR - Error inesperado al verificar certificado para dlc-kon-qa.eastus2.cloudapp.azure.com: [Errno 11001] getaddrinfo failed
+2025-04-25 15:12:20,393 - __main__ - ERROR - Error inesperado al verificar certificado para dlc-kon-qa.eastus2.cloudapp.azure.com: [Errno 11001] getaddrinfo failed
+2025-04-25 15:12:20,506 - __main__ - ERROR - Error inesperado al verificar certificado para fe-sagc-prueba.eastus2.cloudapp.azure.com: [Errno 11001] getaddrinfo failed
+2025-04-25 15:12:20,506 - __main__ - ERROR - Error inesperado al verificar certificado para fe-sagc-prueba.eastus2.cloudapp.azure.com: [Errno 11001] getaddrinfo failed
+2025-04-25 15:12:21,159 - __main__ - WARNING - Timeout al verificar certificado para skitrm53.eastus2.cloudapp.azure.com
+2025-04-25 15:12:21,159 - __main__ - WARNING - Timeout al verificar certificado para skitrm53.eastus2.cloudapp.azure.com
+2025-04-25 15:12:22,029 - __main__ - ERROR - Error inesperado al verificar certificado para konciliaworldoffice.eastus2.cloudapp.azure.com: [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión
+2025-04-25 15:12:22,080 - __main__ - ERROR - Error inesperado al verificar certificado para konciliaworldoffice.eastus2.cloudapp.azure.com: [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión
+2025-04-25 15:12:22,512 - __main__ - ERROR - Error inesperado al verificar certificado para worldoffice-ws.eastus2.cloudapp.azure.com: [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión
+2025-04-25 15:12:22,566 - __main__ - ERROR - Error inesperado al verificar certificado para worldoffice-ws.eastus2.cloudapp.azure.com: [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión
+2025-04-25 15:12:24,426 - __main__ - WARNING - Timeout al verificar certificado para skitrm54.eastus2.cloudapp.azure.com
+2025-04-25 15:12:24,426 - __main__ - WARNING - Timeout al verificar certificado para skitrm54.eastus2.cloudapp.azure.com
+2025-04-25 15:12:24,504 - __main__ - WARNING - Timeout al verificar certificado para skitrm9.eastus2.cloudapp.azure.com
+2025-04-25 15:12:24,505 - __main__ - WARNING - Timeout al verificar certificado para skitrm9.eastus2.cloudapp.azure.com
+2025-04-25 15:12:25,377 - __main__ - WARNING - Timeout al verificar certificado para cfdkreqa.eastus2.cloudapp.azure.com
+2025-04-25 15:12:25,409 - __main__ - WARNING - Timeout al verificar certificado para cfdkreqa.eastus2.cloudapp.azure.com
+2025-04-25 15:12:25,656 - __main__ - WARNING - Timeout al verificar certificado para hardening.eastus2.cloudapp.azure.com
+2025-04-25 15:12:25,657 - __main__ - WARNING - Timeout al verificar certificado para hardening.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,238 - __main__ - WARNING - Timeout al verificar certificado para konciliaprtkcbqa.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,238 - __main__ - WARNING - Timeout al verificar certificado para konciliaprtkcbqa.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,329 - __main__ - WARNING - Timeout al verificar certificado para konciliastudio.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,329 - __main__ - WARNING - Timeout al verificar certificado para konciliastudio.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,562 - __main__ - WARNING - Timeout al verificar certificado para kondev2.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,563 - __main__ - WARNING - Timeout al verificar certificado para kondev2.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,968 - __main__ - WARNING - Timeout al verificar certificado para kondev3.eastus2.cloudapp.azure.com
+2025-04-25 15:12:26,969 - __main__ - WARNING - Timeout al verificar certificado para kondev3.eastus2.cloudapp.azure.com
+2025-04-25 15:12:27,171 - __main__ - WARNING - Timeout al verificar certificado para konciliadev5.eastus2.cloudapp.azure.com
+2025-04-25 15:12:27,171 - __main__ - WARNING - Timeout al verificar certificado para konciliadev5.eastus2.cloudapp.azure.com
+2025-04-25 15:12:27,789 - __main__ - WARNING - Timeout al verificar certificado para konsoporte.eastus2.cloudapp.azure.com
+2025-04-25 15:12:27,790 - __main__ - WARNING - Timeout al verificar certificado para konsoporte.eastus2.cloudapp.azure.com
+2025-04-25 15:12:29,750 - __main__ - WARNING - Timeout al verificar certificado para pruebaproject.eastus2.cloudapp.azure.com
+2025-04-25 15:12:29,750 - __main__ - WARNING - Timeout al verificar certificado para pruebaproject.eastus2.cloudapp.azure.com
+2025-04-25 15:13:14,881 - __main__ - ERROR - Error en notification_thread: descriptor 'time' for 'datetime.datetime' objects doesn't apply to a 'int' object
+2025-04-25 15:14:14,893 - __main__ - ERROR - Error en notification_thread: descriptor 'time' for 'datetime.datetime' objects doesn't apply to a 'int' object
+2025-04-25 15:14:24,298 - __main__ - INFO - Hilo de notificaciones iniciado
+2025-04-25 15:14:24,300 - __main__ - INFO - DomainMonitor inicializado correctamente
+2025-04-25 15:14:25,205 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-04-25 15:14:25,205 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-04-25 15:14:25,398 - __main__ - ERROR - Error en notification_thread: descriptor 'time' for 'datetime.datetime' objects doesn't apply to a 'int' object
+2025-04-25 15:14:25,961 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm18.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:25,990 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm18.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:26,194 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm10.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:26,195 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm10.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:26,196 - __main__ - WARNING - Error SSL al verificar certificado para skitrm2.eastus2.cloudapp.azure.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1028)
+2025-04-25 15:14:26,332 - __main__ - WARNING - Error SSL al verificar certificado para skitrm2.eastus2.cloudapp.azure.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1028)
+2025-04-25 15:14:27,085 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm28.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:27,087 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm28.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:27,448 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm30.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:27,489 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm30.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:27,753 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm32.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:27,808 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm32.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:28,150 - werkzeug - INFO - 127.0.0.1 - - [25/Apr/2025 15:14:28] "GET / HTTP/1.1" 200 -
+2025-04-25 15:14:29,273 - werkzeug - INFO - 127.0.0.1 - - [25/Apr/2025 15:14:29] "GET /api/get_domains HTTP/1.1" 200 -
+2025-04-25 15:14:29,384 - __main__ - ERROR - Error inesperado al verificar certificado para admctasdb.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:29,419 - werkzeug - INFO - 127.0.0.1 - - [25/Apr/2025 15:14:29] "POST /api/add_domain HTTP/1.1" 200 -
+2025-04-25 15:14:30,972 - __main__ - WARNING - Timeout al verificar certificado para skitrm14.eastus2.cloudapp.azure.com
+2025-04-25 15:14:30,972 - __main__ - WARNING - Timeout al verificar certificado para skitrm17.southcentralus.cloudapp.azure.com
+2025-04-25 15:14:30,972 - __main__ - WARNING - Timeout al verificar certificado para skitrm17.southcentralus.cloudapp.azure.com
+2025-04-25 15:14:30,972 - __main__ - WARNING - Timeout al verificar certificado para skitrm14.eastus2.cloudapp.azure.com
+2025-04-25 15:14:31,107 - __main__ - WARNING - Timeout al verificar certificado para skitrm21.eastus2.cloudapp.azure.com
+2025-04-25 15:14:31,107 - __main__ - WARNING - Timeout al verificar certificado para skitrm21.eastus2.cloudapp.azure.com
+2025-04-25 15:14:31,150 - __main__ - WARNING - Timeout al verificar certificado para skitrm22.eastus2.cloudapp.azure.com
+2025-04-25 15:14:31,150 - __main__ - WARNING - Timeout al verificar certificado para skitrm22.eastus2.cloudapp.azure.com
+2025-04-25 15:14:31,609 - __main__ - WARNING - Timeout al verificar certificado para skitrm24.eastus2.cloudapp.azure.com
+2025-04-25 15:14:31,747 - __main__ - WARNING - Timeout al verificar certificado para skitrm24.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,087 - __main__ - WARNING - Timeout al verificar certificado para skitrm27.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,087 - __main__ - WARNING - Timeout al verificar certificado para skitrm26.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,087 - __main__ - WARNING - Timeout al verificar certificado para skitrm25.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,104 - __main__ - WARNING - Timeout al verificar certificado para skitrm26.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,150 - __main__ - WARNING - Timeout al verificar certificado para skitrm25.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,180 - __main__ - WARNING - Timeout al verificar certificado para skitrm27.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,656 - __main__ - WARNING - Timeout al verificar certificado para skitrm31.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,656 - __main__ - WARNING - Timeout al verificar certificado para skitrm31.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,917 - __main__ - WARNING - Timeout al verificar certificado para skitrm34.eastus2.cloudapp.azure.com
+2025-04-25 15:14:32,919 - __main__ - WARNING - Timeout al verificar certificado para skitrm34.eastus2.cloudapp.azure.com
+2025-04-25 15:14:37,481 - werkzeug - INFO - 127.0.0.1 - - [25/Apr/2025 15:14:37] "GET / HTTP/1.1" 200 -
+2025-04-25 15:14:37,980 - werkzeug - INFO - 127.0.0.1 - - [25/Apr/2025 15:14:37] "GET /api/get_domains HTTP/1.1" 200 -
+2025-04-25 15:14:37,981 - __main__ - ERROR - Error inesperado al verificar certificado para admctasdb.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:14:38,001 - werkzeug - INFO - 127.0.0.1 - - [25/Apr/2025 15:14:38] "POST /api/add_domain HTTP/1.1" 200 -
+2025-04-25 15:15:14,903 - __main__ - ERROR - Error en notification_thread: descriptor 'time' for 'datetime.datetime' objects doesn't apply to a 'int' object
+2025-04-25 15:15:30,161 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm10.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:15:30,319 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm18.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:15:30,499 - __main__ - WARNING - Error SSL al verificar certificado para skitrm2.eastus2.cloudapp.azure.com: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1028)
+2025-04-25 15:15:30,547 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm28.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:15:30,662 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm30.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:15:30,818 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm32.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:15:35,168 - __main__ - WARNING - Timeout al verificar certificado para skitrm14.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,289 - __main__ - WARNING - Timeout al verificar certificado para skitrm21.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,289 - __main__ - WARNING - Timeout al verificar certificado para skitrm17.southcentralus.cloudapp.azure.com
+2025-04-25 15:15:35,386 - __main__ - WARNING - Timeout al verificar certificado para skitrm22.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,420 - __main__ - WARNING - Timeout al verificar certificado para skitrm25.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,420 - __main__ - WARNING - Timeout al verificar certificado para skitrm24.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,444 - __main__ - WARNING - Timeout al verificar certificado para skitrm26.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,506 - __main__ - WARNING - Timeout al verificar certificado para skitrm27.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,751 - __main__ - WARNING - Timeout al verificar certificado para skitrm31.eastus2.cloudapp.azure.com
+2025-04-25 15:15:35,968 - __main__ - WARNING - Timeout al verificar certificado para skitrm34.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,423 - __main__ - WARNING - Timeout al verificar certificado para skitrm35.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,622 - __main__ - WARNING - Timeout al verificar certificado para skitrm39-dev.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,623 - __main__ - WARNING - Timeout al verificar certificado para skitrm40.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,745 - __main__ - WARNING - Timeout al verificar certificado para skitrm41.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,808 - __main__ - WARNING - Timeout al verificar certificado para skitrm45.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,839 - __main__ - ERROR - Error inesperado al verificar certificado para skitrm8.southcentralus.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:15:40,846 - __main__ - WARNING - Timeout al verificar certificado para skitrm47.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,847 - __main__ - WARNING - Timeout al verificar certificado para skitrm46.eastus2.cloudapp.azure.com
+2025-04-25 15:15:40,900 - __main__ - WARNING - Timeout al verificar certificado para skitrm49.southcentralus.cloudapp.azure.com
+2025-04-25 15:15:40,988 - __main__ - WARNING - Timeout al verificar certificado para skitrm50.eastus2.cloudapp.azure.com
+2025-04-25 15:15:41,110 - __main__ - ERROR - Error inesperado al verificar certificado para fe-sagc-prueba.eastus2.cloudapp.azure.com: [Errno 11001] getaddrinfo failed
+2025-04-25 15:15:41,112 - __main__ - ERROR - Error inesperado al verificar certificado para admctasdb.eastus2.cloudapp.azure.com: [WinError 10049] La dirección solicitada no es válida en este contexto
+2025-04-25 15:15:41,113 - __main__ - ERROR - Error inesperado al verificar certificado para dlc-kon-qa.eastus2.cloudapp.azure.com: [Errno 11001] getaddrinfo failed
+2025-04-25 15:15:41,209 - __main__ - WARNING - Timeout al verificar certificado para skitrm53.eastus2.cloudapp.azure.com
+2025-04-25 15:15:43,475 - __main__ - ERROR - Error inesperado al verificar certificado para worldoffice-ws.eastus2.cloudapp.azure.com: [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión
+2025-04-25 15:15:43,539 - __main__ - ERROR - Error inesperado al verificar certificado para konciliaworldoffice.eastus2.cloudapp.azure.com: [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión
+2025-04-25 15:15:45,627 - __main__ - WARNING - Timeout al verificar certificado para skitrm54.eastus2.cloudapp.azure.com
+2025-04-25 15:15:45,814 - __main__ - WARNING - Timeout al verificar certificado para skitrm9.eastus2.cloudapp.azure.com
+2025-04-25 15:15:46,186 - __main__ - WARNING - Timeout al verificar certificado para cfdkreqa.eastus2.cloudapp.azure.com
+2025-04-25 15:15:46,281 - __main__ - WARNING - Timeout al verificar certificado para hardening.eastus2.cloudapp.azure.com
+2025-04-25 15:15:46,391 - __main__ - WARNING - Timeout al verificar certificado para konciliaprtkcbqa.eastus2.cloudapp.azure.com
+2025-04-25 15:15:46,391 - __main__ - WARNING - Timeout al verificar certificado para konciliastudio.eastus2.cloudapp.azure.com
+2025-04-25 15:15:46,407 - __main__ - WARNING - Timeout al verificar certificado para kondev2.eastus2.cloudapp.azure.com
+2025-04-25 15:15:46,452 - __main__ - WARNING - Timeout al verificar certificado para kondev3.eastus2.cloudapp.azure.com
+2025-04-25 15:15:48,641 - __main__ - WARNING - Timeout al verificar certificado para konciliadev5.eastus2.cloudapp.azure.com
+2025-04-25 15:15:48,719 - __main__ - WARNING - Timeout al verificar certificado para konsoporte.eastus2.cloudapp.azure.com
+2025-04-25 15:15:50,803 - __main__ - WARNING - Timeout al verificar certificado para pruebaproject.eastus2.cloudapp.azure.com
