@@ -51,9 +51,9 @@ class DomainMonitor:
 
             # Configuración de email
             self.email_config = {
-                'sender': os.getenv('EMAIL_SENDER', 'pruebassoftaware@gmail.com'),
-                'password': os.getenv('EMAIL_PASSWORD', 'gein gheu qtvh rbiu'),
-                'recipient': os.getenv('EMAIL_RECIPIENT', 'squiroga@koncilia.com.co')
+                'sender': os.getenv('EMAIL_SENDER', 'konciliabyskit@gmail.com'),
+                'password': os.getenv('EMAIL_PASSWORD', 'jeueaqarntuyguie'),
+                'recipient': os.getenv('EMAIL_RECIPIENT', 'soporte@koncilia.com.co')
             }
 
             self.add_log("🚀 Sistema iniciado")
