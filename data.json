@@ -5,14 +5,14 @@
         "common_name": "skitrm1.eastus2.cloudapp.azure.com",
         "valid_from": "21/04/2025",
         "valid_until": "20/07/2025",
-        "days_remaining": 87,
-        "last_check": "13:28:33"
+        "days_remaining": 86,
+        "last_check": "12:08:51"
     },
     "skitrm10.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:43"
+        "last_check": "12:08:50"
     },
     "skitrm11.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -20,8 +20,8 @@
         "common_name": "skitrm11.eastus2.cloudapp.azure.com",
         "valid_from": "15/04/2025",
         "valid_until": "14/07/2025",
-        "days_remaining": 82,
-        "last_check": "13:28:34"
+        "days_remaining": 80,
+        "last_check": "12:08:51"
     },
     "skitrm12.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -29,50 +29,53 @@
         "common_name": "skitrm12.eastus2.cloudapp.azure.com",
         "valid_from": "31/03/2025",
         "valid_until": "29/06/2025",
-        "days_remaining": 66,
-        "last_check": "13:28:35"
+        "days_remaining": 65,
+        "last_check": "12:08:51"
     },
     "skitrm14.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "last_check": "12:08:56"
     },
     "skitrm16.eastus2.cloudapp.azure.com": {
-        "status": "Offline",
-        "has_ssl": false,
-        "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "status": "Online",
+        "has_ssl": true,
+        "common_name": "skitrm16.eastus2.cloudapp.azure.com",
+        "valid_from": "28/01/2025",
+        "valid_until": "28/04/2025",
+        "days_remaining": 3,
+        "last_check": "12:08:51"
     },
     "skitrm17.southcentralus.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "last_check": "12:08:56"
     },
     "skitrm18.southcentralus.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:44"
+        "last_check": "12:08:51"
     },
     "skitrm2.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:44"
+        "last_check": "12:08:51"
     },
     "skitrm21.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "last_check": "12:08:56"
     },
     "skitrm22.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "last_check": "12:08:56"
     },
     "skitrm23.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -80,74 +83,77 @@
         "common_name": "skitrm23.eastus2.cloudapp.azure.com",
         "valid_from": "31/03/2025",
         "valid_until": "29/06/2025",
-        "days_remaining": 66,
-        "last_check": "13:28:35"
+        "days_remaining": 65,
+        "last_check": "12:08:51"
     },
     "skitrm24.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "13:22:43"
+        "last_check": "12:08:56"
     },
     "skitrm25.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:55"
+        "last_check": "12:08:56"
     },
     "skitrm26.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:04"
+        "last_check": "12:08:56"
     },
     "skitrm27.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:04"
+        "last_check": "12:08:56"
     },
     "skitrm28.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "last_check": "12:08:51"
     },
     "skitrm29.eastus2.cloudapp.azure.com": {
-        "status": "Offline",
-        "has_ssl": false,
-        "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:04"
+        "status": "Online",
+        "has_ssl": true,
+        "common_name": "skitrm29.eastus2.cloudapp.azure.com",
+        "valid_from": "03/04/2025",
+        "valid_until": "02/07/2025",
+        "days_remaining": 68,
+        "last_check": "12:08:51"
     },
     "skitrm30.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "last_check": "12:08:51"
     },
     "skitrm31.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:04"
+        "last_check": "12:08:56"
     },
     "skitrm32.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:27:54"
+        "last_check": "12:08:52"
     },
     "skitrm34.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:04"
+        "last_check": "12:08:57"
     },
     "skitrm35.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "13:22:53"
+        "last_check": "12:09:01"
     },
     "skitrm37.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -155,8 +161,8 @@
         "common_name": "skitrm37.eastus2.cloudapp.azure.com",
         "valid_from": "07/04/2025",
         "valid_until": "06/07/2025",
-        "days_remaining": 73,
-        "last_check": "13:28:35"
+        "days_remaining": 72,
+        "last_check": "12:08:56"
     },
     "skitrm38.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -164,80 +170,80 @@
         "common_name": "skitrm38.eastus2.cloudapp.azure.com",
         "valid_from": "08/04/2025",
         "valid_until": "07/07/2025",
-        "days_remaining": 74,
-        "last_check": "13:28:36"
+        "days_remaining": 73,
+        "last_check": "12:08:56"
     },
     "skitrm39-dev.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:06"
+        "last_check": "12:09:01"
     },
     "skitrm40.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:14"
+        "last_check": "12:09:01"
     },
     "skitrm41.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "13:23:06"
+        "last_check": "12:09:01"
     },
     "skitrm42.eastus2.cloudapp.azure.com": {
-        "status": "Offline",
-        "has_ssl": false,
-        "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:04"
-    },
-    "skitrm43.eastus2.cloudapp.azure.com": {
         "status": "Online",
         "has_ssl": true,
-        "common_name": "skitrm43.eastus2.cloudapp.azure.com",
-        "valid_from": "03/04/2025",
-        "valid_until": "02/07/2025",
-        "days_remaining": 70,
-        "last_check": "13:28:36"
+        "common_name": "skitrm42.eastus2.cloudapp.azure.com",
+        "valid_from": "23/04/2025",
+        "valid_until": "22/07/2025",
+        "days_remaining": 88,
+        "last_check": "12:08:56"
     },
-    "skitrm44.eastus2.cloudapp.azure.com": {
+    "skitrm43.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:04"
+        "last_check": "12:09:01"
+    },
+    "skitrm44.eastus2.cloudapp.azure.com": {
+        "status": "Online",
+        "has_ssl": true,
+        "common_name": "skitrm44.eastus2.cloudapp.azure.com",
+        "valid_from": "24/04/2025",
+        "valid_until": "23/07/2025",
+        "days_remaining": 89,
+        "last_check": "12:08:56"
     },
     "skitrm45.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:14"
+        "last_check": "12:09:01"
     },
     "skitrm46.eastus2.cloudapp.azure.com": {
-        "status": "Online",
-        "has_ssl": true,
-        "common_name": "skitrm46.eastus2.cloudapp.azure.com",
-        "valid_from": "23/04/2025",
-        "valid_until": "22/07/2025",
-        "days_remaining": 90,
-        "last_check": "13:28:37"
+        "status": "Offline",
+        "has_ssl": false,
+        "error": "No se pudo obtener el certificado.",
+        "last_check": "12:09:01"
     },
     "skitrm47.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:05"
+        "last_check": "12:09:01"
     },
     "skitrm49.southcentralus.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:15"
+        "last_check": "12:09:02"
     },
     "skitrm50.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "13:23:17"
+        "last_check": "12:09:02"
     },
     "skitrm51.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -245,56 +251,59 @@
         "common_name": "skitrm51.eastus2.cloudapp.azure.com",
         "valid_from": "05/03/2025",
         "valid_until": "03/06/2025",
-        "days_remaining": 41,
-        "last_check": "13:28:37"
+        "days_remaining": 39,
+        "last_check": "12:09:01"
     },
     "skitrm52.eastus2.cloudapp.azure.com": {
-        "status": "Offline",
-        "has_ssl": false,
-        "error": "No se pudo obtener el certificado.",
-        "last_check": "13:23:28"
+        "status": "Online",
+        "has_ssl": true,
+        "common_name": "skitrm52.eastus2.cloudapp.azure.com",
+        "valid_from": "16/04/2025",
+        "valid_until": "15/07/2025",
+        "days_remaining": 81,
+        "last_check": "12:09:01"
     },
     "skitrm53.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:15"
+        "last_check": "12:09:06"
     },
     "skitrm54.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:15"
+        "last_check": "12:09:06"
     },
     "skitrm8.southcentralus.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:06"
+        "last_check": "12:09:01"
     },
     "skitrm9.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:16"
+        "last_check": "12:09:06"
     },
     "konciliaworldoffice.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:16"
+        "last_check": "12:09:04"
     },
     "worldoffice-ws.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:17"
+        "last_check": "12:09:04"
     },
     "admctasdb.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:15"
+        "last_check": "12:09:01"
     },
     "bdo-kon-qa.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -302,32 +311,32 @@
         "common_name": "bdo-kon-qa.eastus2.cloudapp.azure.com",
         "valid_from": "17/03/2025",
         "valid_until": "15/06/2025",
-        "days_remaining": 53,
-        "last_check": "13:28:38"
+        "days_remaining": 51,
+        "last_check": "12:09:02"
     },
     "cfdkreqa.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:25"
+        "last_check": "12:09:07"
     },
     "dlc-kon-qa.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:15"
+        "last_check": "12:09:02"
     },
     "fe-sagc-prueba.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:15"
+        "last_check": "12:09:02"
     },
     "hardening.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:26"
+        "last_check": "12:09:07"
     },
     "konciliaamrkcb.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -335,8 +344,8 @@
         "common_name": "konciliaamrkcb.eastus2.cloudapp.azure.com",
         "valid_from": "21/02/2025",
         "valid_until": "22/05/2025",
-        "days_remaining": 28,
-        "last_check": "13:28:38"
+        "days_remaining": 27,
+        "last_check": "12:09:02"
     },
     "konciliaatp.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -344,8 +353,8 @@
         "common_name": "konciliaatp.eastus2.cloudapp.azure.com",
         "valid_from": "21/04/2025",
         "valid_until": "20/07/2025",
-        "days_remaining": 88,
-        "last_check": "13:28:39"
+        "days_remaining": 86,
+        "last_check": "12:09:02"
     },
     "konciliagdckre.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -353,8 +362,8 @@
         "common_name": "konciliagdckre.eastus2.cloudapp.azure.com",
         "valid_from": "04/04/2025",
         "valid_until": "03/07/2025",
-        "days_remaining": 70,
-        "last_check": "13:28:39"
+        "days_remaining": 69,
+        "last_check": "12:09:02"
     },
     "konciliamrc.eastus2.cloudapp.azure.com": {
         "status": "Online",
@@ -362,58 +371,58 @@
         "common_name": "konciliamrc.eastus2.cloudapp.azure.com",
         "valid_from": "31/03/2025",
         "valid_until": "29/06/2025",
-        "days_remaining": 66,
-        "last_check": "13:28:39"
+        "days_remaining": 65,
+        "last_check": "12:09:02"
     },
     "konciliaprtkcbqa.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:26"
+        "last_check": "12:09:07"
     },
     "konciliastudio.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:26"
+        "last_check": "12:09:07"
     },
     "konciliatblkcb.eastus2.cloudapp.azure.com": {
         "status": "Online",
         "has_ssl": true,
         "common_name": "konciliatblkcb.eastus2.cloudapp.azure.com",
-        "valid_from": "27/01/2025",
-        "valid_until": "27/04/2025",
-        "days_remaining": 4,
-        "last_check": "13:28:40"
+        "valid_from": "23/04/2025",
+        "valid_until": "22/07/2025",
+        "days_remaining": 88,
+        "last_check": "12:09:03"
     },
     "kondev2.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:27"
+        "last_check": "12:09:08"
     },
     "kondev3.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:27"
+        "last_check": "12:09:09"
     },
     "konciliadev5.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:35"
+        "last_check": "12:09:09"
     },
     "konsoporte.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:36"
+        "last_check": "12:09:11"
     },
     "pruebaproject.eastus2.cloudapp.azure.com": {
         "status": "Offline",
         "has_ssl": false,
         "error": "No se pudo obtener el certificado.",
-        "last_check": "14:28:37"
+        "last_check": "12:09:11"
     }
 }
