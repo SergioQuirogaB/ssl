@@ -13,7 +13,21 @@ from email.mime.multipart import MIMEMultipart
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pytz
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timedelta
+import logging
+import sys
+
+# Configuración de logging para Azure
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler('app.log')
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 DATA_FILE = 'data.json'  # Archivo donde se guardan los dominios
 CACHE_DURATION = 300  # 5 minutos de caché
@@ -24,42 +38,48 @@ app = Flask(__name__)
 
 class DomainMonitor:
     def __init__(self):
-        self.domains = {}
-        self.alert_days = [10, 5, 4, 3, 2, 1]  # Días para enviar alertas
-        self.alerts_sent = {}
-        self.cache = {}
-        self.cache_timestamp = {}
-        self.last_alert_date = None
-        self.last_update_time = None
-        self.update_interval = 180  # 3 minutos entre actualizaciones
-        self.logs = deque(maxlen=MAX_LOGS)  # Cola para almacenar logs
+        try:
+            self.domains = {}
+            self.alert_days = [10, 5, 4, 3, 2, 1]  # Días para enviar alertas
+            self.alerts_sent = {}
+            self.cache = {}
+            self.cache_timestamp = {}
+            self.last_alert_date = None
+            self.last_update_time = None
+            self.update_interval = 180  # 3 minutos entre actualizaciones
+            self.logs = deque(maxlen=MAX_LOGS)  # Cola para almacenar logs
 
-        # Configuración de email
-        self.email_config = {
-            'sender': os.getenv('EMAIL_SENDER', 'pruebassoftaware@gmail.com'),
-            'password': os.getenv('EMAIL_PASSWORD', 'gein gheu qtvh rbiu'),
-            'recipient': os.getenv('EMAIL_RECIPIENT', 'squiroga@koncilia.com.co')
-        }
+            # Configuración de email
+            self.email_config = {
+                'sender': os.getenv('EMAIL_SENDER', 'pruebassoftaware@gmail.com'),
+                'password': os.getenv('EMAIL_PASSWORD', 'gein gheu qtvh rbiu'),
+                'recipient': os.getenv('EMAIL_RECIPIENT', 'squiroga@koncilia.com.co')
+            }
 
-        self.add_log("🚀 Sistema iniciado")
-        self.load_domains()
-        
-        # Enviar correo de prueba al iniciar
-        print("📧 Enviando correo de prueba...")
-        self.send_test_email()
-        
-        # Iniciar hilos
-        self.start_scheduled_notifications()
-        self.start_domain_updater()
+            self.add_log("🚀 Sistema iniciado")
+            self.load_domains()
+            
+            # Iniciar hilos
+            self.start_scheduled_notifications()
+            self.start_domain_updater()
+            
+            logger.info("DomainMonitor inicializado correctamente")
+        except Exception as e:
+            logger.error(f"Error al inicializar DomainMonitor: {str(e)}")
+            raise
 
     def add_log(self, message):
         """Añade un mensaje al registro de logs"""
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        log_entry = {
-            'timestamp': timestamp,
-            'message': message
-        }
-        self.logs.append(log_entry)
+        try:
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            log_entry = {
+                'timestamp': timestamp,
+                'message': message
+            }
+            self.logs.append(log_entry)
+            logger.info(message)
+        except Exception as e:
+            logger.error(f"Error al agregar log: {str(e)}")
 
     def get_logs(self):
         """Retorna los logs almacenados"""
@@ -69,35 +89,40 @@ class DomainMonitor:
         """Inicia el hilo para enviar notificaciones programadas"""
         def notification_thread():
             while True:
-                now = datetime.now(pytz.timezone('America/Bogota'))
-                current_time = now.strftime('%H:%M:%S')
-                current_date = now.date()
-                
-                self.add_log(f"🕒 Verificación de hora: {current_time}")
-                
-                if now.hour == 9 and now.minute == 0 and (self.last_alert_date is None or self.last_alert_date != current_date):
-                    self.add_log("🕛 Iniciando envío de alertas (9:00 AM Bogotá)")
-                    self.check_and_send_daily_alerts()
-                    self.last_alert_date = current_date
-                    self.add_log("✅ Proceso de alertas completado")
-                else:
-                    time_until_next = datetime.combine(
-                        now.date() if now.hour < 9 else (now + datetime.timedelta(days=1)).date(),
-                        datetime.time(9, 0)
-                    )
-                    if now.hour >= 9:
-                        time_until_next += datetime.timedelta(days=1)
+                try:
+                    now = datetime.now(pytz.timezone('America/Bogota'))
+                    current_time = now.strftime('%H:%M:%S')
+                    current_date = now.date()
                     
-                    time_diff = time_until_next - now
-                    hours = time_diff.seconds // 3600
-                    minutes = (time_diff.seconds % 3600) // 60
+                    self.add_log(f"🕒 Verificación de hora: {current_time}")
                     
-                    self.add_log(f"⏳ Próxima verificación de alertas en {hours}:{minutes:02d} horas")
-                
-                time.sleep(180)  # Verificar cada 3 minutos
+                    if now.hour == 9 and now.minute == 0 and (self.last_alert_date is None or self.last_alert_date != current_date):
+                        self.add_log("🕛 Iniciando envío de alertas (9:00 AM Bogotá)")
+                        self.check_and_send_daily_alerts()
+                        self.last_alert_date = current_date
+                        self.add_log("✅ Proceso de alertas completado")
+                    else:
+                        time_until_next = datetime.combine(
+                            now.date() if now.hour < 9 else (now + timedelta(days=1)).date(),
+                            datetime.time(9, 0)
+                        )
+                        if now.hour >= 9:
+                            time_until_next += timedelta(days=1)
+                        
+                        time_diff = time_until_next - now
+                        hours = time_diff.seconds // 3600
+                        minutes = (time_diff.seconds % 3600) // 60
+                        
+                        self.add_log(f"⏳ Próxima verificación de alertas en {hours}:{minutes:02d} horas")
+                    
+                    time.sleep(180)  # Verificar cada 3 minutos
+                except Exception as e:
+                    logger.error(f"Error en notification_thread: {str(e)}")
+                    time.sleep(60)  # Esperar 1 minuto antes de reintentar
 
         thread = threading.Thread(target=notification_thread, daemon=True)
         thread.start()
+        logger.info("Hilo de notificaciones iniciado")
 
     def check_and_send_daily_alerts(self):
         """Verifica y envía alertas diarias para certificados próximos a vencer"""
@@ -130,18 +155,14 @@ class DomainMonitor:
 
     def send_alert_email(self, domain, days_remaining):
         """Envía una alerta por correo si el certificado está por vencer"""
-        self.add_log("\n📨 Preparando correo de alerta")
-        print("=========================================")
-        self.add_log(f"📧 De: {self.email_config['sender']}")
-        self.add_log(f"📧 Para: {self.email_config['recipient']}")
-        self.add_log(f"🌐 Dominio: {domain}")
-        self.add_log(f"📅 Días restantes: {days_remaining}")
-        
-        if not self.email_config['password']:
-            self.add_log("❌ ERROR: No se ha configurado la contraseña del email")
-            return
-
         try:
+            self.add_log("\n📨 Preparando correo de alerta")
+            logger.info(f"Preparando correo de alerta para {domain}")
+            
+            if not self.email_config['password']:
+                logger.error("No se ha configurado la contraseña del email")
+                return
+
             msg = MIMEMultipart()
             msg['From'] = self.email_config['sender']
             msg['To'] = self.email_config['recipient']
@@ -267,7 +288,7 @@ class DomainMonitor:
 
                     <div class="footer">
                         <p>Alerta diaria programada a las 9:00 AM (Bogotá)</p>
-                        <p>© {datetime.datetime.now().year} SSL Monitor - Koncilia</p>
+                        <p>© {datetime.now().year} SSL Monitor - Koncilia</p>
                     </div>
                 </div>
             </body>
@@ -276,25 +297,28 @@ class DomainMonitor:
 
             msg.attach(MIMEText(body, 'html'))
 
-            self.add_log("📤 Conectando al servidor SMTP...")
+            logger.info("Conectando al servidor SMTP...")
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
-                self.add_log("🔐 Iniciando conexión segura...")
+                logger.info("Iniciando conexión segura...")
                 server.starttls()
-                self.add_log("🔑 Iniciando sesión...")
+                logger.info("Iniciando sesión...")
                 server.login(self.email_config['sender'], self.email_config['password'])
-                self.add_log("📨 Enviando correo...")
+                logger.info("Enviando correo...")
                 server.send_message(msg)
-                self.add_log("✅ Correo enviado exitosamente")
+                logger.info("Correo enviado exitosamente")
 
             self.add_log(f"✅ Alerta enviada para {domain}")
             self.alerts_sent.setdefault(domain, set()).add(days_remaining)
-            self.add_log("=========================================\n")
 
+        except smtplib.SMTPAuthenticationError:
+            logger.error("Error de autenticación SMTP")
+            self.add_log("❌ Error de autenticación al enviar email")
+        except smtplib.SMTPException as e:
+            logger.error(f"Error SMTP: {str(e)}")
+            self.add_log(f"❌ Error SMTP al enviar email: {str(e)}")
         except Exception as e:
-            self.add_log(f"❌ ERROR al enviar email: {str(e)}")
-            import traceback
-            self.add_log(f"❌ Detalles del error: {traceback.format_exc()}")
-            self.add_log("=========================================\n")
+            logger.error(f"Error inesperado al enviar email: {str(e)}")
+            self.add_log(f"❌ Error inesperado al enviar email: {str(e)}")
 
     def check_and_send_alerts(self, domain, days_remaining):
         """Este método ya no se usa, mantenido por compatibilidad"""
@@ -328,25 +352,27 @@ class DomainMonitor:
 
     def get_certificate_info(self, domain):
         """Obtiene la información SSL del dominio con caché optimizada"""
-        current_time = time.time()
-        
-        # Verificar caché válida
-        if (domain in self.cache and 
-            domain in self.cache_timestamp and 
-            current_time - self.cache_timestamp[domain] < CACHE_DURATION):
-            return self.cache[domain]
-
         try:
+            current_time = time.time()
+            
+            # Verificar caché válida
+            if (domain in self.cache and 
+                domain in self.cache_timestamp and 
+                current_time - self.cache_timestamp[domain] < CACHE_DURATION):
+                return self.cache[domain]
+
             # Timeout reducido para conexiones más rápidas
             context = ssl.create_default_context()
+            context.timeout = 5  # 5 segundos de timeout
+            
             with socket.create_connection((domain, 443), timeout=5) as sock:
                 with context.wrap_socket(sock, server_hostname=domain) as ssock:
                     cert_binary = ssock.getpeercert(binary_form=True)
                     x509 = crypto.load_certificate(crypto.FILETYPE_ASN1, cert_binary)
 
                     # Calcular fechas una sola vez
-                    now = datetime.datetime.now()
-                    expiry_date = datetime.datetime.strptime(
+                    now = datetime.now()
+                    expiry_date = datetime.strptime(
                         x509.get_notAfter().decode(), 
                         '%Y%m%d%H%M%SZ'
                     )
@@ -355,7 +381,7 @@ class DomainMonitor:
                         'status': 'Online',
                         'has_ssl': True,
                         'common_name': dict(x509.get_subject().get_components()).get(b'CN', b'').decode(),
-                        'valid_from': datetime.datetime.strptime(
+                        'valid_from': datetime.strptime(
                             x509.get_notBefore().decode(), 
                             '%Y%m%d%H%M%SZ'
                         ).strftime('%d/%m/%Y'),
@@ -370,12 +396,29 @@ class DomainMonitor:
 
                     return result
 
+        except socket.timeout:
+            logger.warning(f"Timeout al verificar certificado para {domain}")
+            return {
+                'status': 'Offline',
+                'has_ssl': False,
+                'error': 'Timeout al conectar',
+                'last_check': datetime.now().strftime('%H:%M:%S')
+            }
+        except ssl.SSLError as e:
+            logger.warning(f"Error SSL al verificar certificado para {domain}: {str(e)}")
+            return {
+                'status': 'Offline',
+                'has_ssl': False,
+                'error': f'Error SSL: {str(e)}',
+                'last_check': datetime.now().strftime('%H:%M:%S')
+            }
         except Exception as e:
+            logger.error(f"Error inesperado al verificar certificado para {domain}: {str(e)}")
             return {
                 'status': 'Offline',
                 'has_ssl': False,
                 'error': str(e),
-                'last_check': datetime.datetime.now().strftime('%H:%M:%S')
+                'last_check': datetime.now().strftime('%H:%M:%S')
             }
 
     def start_domain_updater(self):
@@ -432,75 +475,6 @@ class DomainMonitor:
         except Exception as e:
             self.add_log(f"❌ Error en actualización paralela: {str(e)}")
 
-    def send_test_email(self):
-        """Envía un correo de prueba"""
-        try:
-            self.add_log("📨 Preparando correo de prueba...")
-            msg = MIMEMultipart()
-            msg['From'] = self.email_config['sender']
-            msg['To'] = self.email_config['recipient']
-            msg['Subject'] = '📧 Prueba de Envío de Correo SSL Monitor'
-
-            body = """
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        line-height: 1.6;
-                        color: #333;
-                        max-width: 600px;
-                        margin: 0 auto;
-                        padding: 20px;
-                    }
-                    .container {
-                        background-color: #f8f9fa;
-                        border-radius: 10px;
-                        padding: 30px;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                    }
-                    .header {
-                        background-color: #007bff;
-                        color: white;
-                        padding: 20px;
-                        border-radius: 5px;
-                        text-align: center;
-                        margin-bottom: 20px;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="header">
-                        <h2>✅ Prueba de Correo SSL Monitor</h2>
-                    </div>
-                    <div style="text-align: center;">
-                        <p>Este es un correo de prueba para verificar que el sistema de notificaciones está funcionando correctamente.</p>
-                        <p>Si recibes este correo, significa que el sistema puede enviar notificaciones.</p>
-                    </div>
-                </div>
-            </body>
-            </html>
-            """
-
-            msg.attach(MIMEText(body, 'html'))
-
-            self.add_log("📤 Conectando al servidor SMTP...")
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
-                self.add_log("🔐 Iniciando conexión segura...")
-                server.starttls()
-                self.add_log("🔑 Iniciando sesión...")
-                server.login(self.email_config['sender'], self.email_config['password'])
-                self.add_log("📨 Enviando correo de prueba...")
-                server.send_message(msg)
-                self.add_log("✅ Correo de prueba enviado exitosamente")
-
-        except Exception as e:
-            self.add_log(f"❌ Error enviando correo de prueba: {str(e)}")
-            import traceback
-            self.add_log(f"❌ Detalles del error: {traceback.format_exc()}")
-
 monitor = DomainMonitor()
 
 @app.route('/')
@@ -509,69 +483,38 @@ def index():
 
 @app.route('/api/add_domain', methods=['POST'])
 def add_domain():
-    """Añade un dominio y lo guarda en data.json"""
-    domain = request.json.get('domain')
-    if not domain:
-        return jsonify({'error': 'Dominio requerido'}), 400
-
-    info = monitor.get_certificate_info(domain)
-    monitor.domains[domain] = info
-    monitor.save_domains()  # Guardar cambios
-    return jsonify(info)
+    data = request.get_json()
+    domain = data.get('domain')
+    if domain:
+        monitor.domains[domain] = monitor.get_certificate_info(domain)
+        monitor.save_domains()
+        return jsonify({'status': 'success'})
+    return jsonify({'status': 'error', 'message': 'No domain provided'}), 400
 
 @app.route('/api/remove_domain', methods=['POST'])
 def remove_domain():
-    """Elimina un dominio y actualiza data.json"""
-    domain = request.json.get('domain')
+    data = request.get_json()
+    domain = data.get('domain')
     if domain in monitor.domains:
         del monitor.domains[domain]
-        monitor.save_domains()  # Guardar cambios
+        monitor.save_domains()
     return jsonify({'status': 'success'})
 
 @app.route('/api/get_domains')
 def get_domains():
-    """Devuelve la lista de dominios monitoreados"""
     return jsonify(monitor.domains)
-
-@app.route('/api/send_test_email')
-def send_test_email():
-    """Envía un correo de prueba"""
-    print("🔔 Enviando correo de prueba...")
-    monitor.send_alert_email('dominio-prueba.com', 10)
-    return jsonify({'status': 'Correo de prueba enviado'})
 
 @app.route('/api/update_notes', methods=['POST'])
 def update_notes():
-    """Actualiza la nota de un dominio y la guarda en data.json"""
-    data = request.json
+    data = request.get_json()
     domain = data.get('domain')
     note = data.get('note')
-
-    if not domain or domain not in monitor.domains:
-        return jsonify({'error': 'Dominio no encontrado'}), 404
-
-    if note is None:  # Evitar que se guarde como null
-        return jsonify({'error': 'Nota vacía'}), 400
-
-    # Guardar la observación en el JSON
-    monitor.domains[domain]['note'] = note
-    monitor.save_domains()  # Guardar en data.json
-
-    return jsonify({'status': 'success', 'saved_note': note})
-
-@app.route('/api/test_alert')
-def test_alert():
-    """Ruta para probar el envío de alertas"""
-    print("\n🔔 INICIANDO PRUEBA DE ALERTA")
-    print("=========================================")
     
-    # Forzar el envío de una alerta de prueba
-    monitor.check_and_send_daily_alerts()
-    
-    return jsonify({
-        'status': 'success',
-        'message': 'Prueba de alerta iniciada'
-    })
+    if domain in monitor.domains:
+        monitor.domains[domain]['note'] = note
+        monitor.save_domains()
+        return jsonify({'status': 'success'})
+    return jsonify({'status': 'error', 'message': 'Domain not found'}), 404
 
 @app.route('/api/logs')
 def get_logs():
