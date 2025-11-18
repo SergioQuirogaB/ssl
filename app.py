@@ -1,7 +1,7 @@
 import os
 import ssl
 import socket
-import datetime
+import datetime as dt
 import time
 import threading
 import json
@@ -13,7 +13,6 @@ from email.mime.multipart import MIMEMultipart
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pytz
 from collections import deque
-from datetime import datetime, timedelta
 import logging
 import sys
 
@@ -48,6 +47,7 @@ class DomainMonitor:
             self.last_update_time = None
             self.update_interval = 180  # 3 minutos entre actualizaciones
             self.logs = deque(maxlen=MAX_LOGS)  # Cola para almacenar logs
+            self.file_lock = threading.Lock()
 
             # Configuración de email
             self.email_config = {
@@ -71,7 +71,7 @@ class DomainMonitor:
     def add_log(self, message):
         """Añade un mensaje al registro de logs"""
         try:
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             log_entry = {
                 'timestamp': timestamp,
                 'message': message
@@ -90,7 +90,7 @@ class DomainMonitor:
         def notification_thread():
             while True:
                 try:
-                    now = datetime.now(pytz.timezone('America/Bogota'))
+                    now = dt.datetime.now(pytz.timezone('America/Bogota'))
                     current_time = now.strftime('%H:%M:%S')
                     current_date = now.date()
                     
@@ -102,12 +102,12 @@ class DomainMonitor:
                         self.last_alert_date = current_date
                         self.add_log("✅ Proceso de alertas completado")
                     else:
-                        time_until_next = datetime.combine(
-                            now.date() if now.hour < 9 else (now + timedelta(days=1)).date(),
-                            datetime.time(9, 0)
+                        time_until_next = dt.datetime.combine(
+                            now.date() if now.hour < 9 else (now + dt.timedelta(days=1)).date(),
+                            dt.time(9, 0)
                         )
                         if now.hour >= 9:
-                            time_until_next += timedelta(days=1)
+                            time_until_next += dt.timedelta(days=1)
                         
                         time_diff = time_until_next - now
                         hours = time_diff.seconds // 3600
@@ -288,7 +288,7 @@ class DomainMonitor:
 
                     <div class="footer">
                         <p>Alerta diaria programada a las 9:00 AM (Bogotá)</p>
-                        <p>© {datetime.now().year} SSL Monitor - Koncilia</p>
+                        <p>© {dt.datetime.now().year} SSL Monitor - Koncilia</p>
                     </div>
                 </div>
             </body>
@@ -327,25 +327,27 @@ class DomainMonitor:
     def save_domains(self):
         """Guarda los dominios en un archivo JSON de manera optimizada"""
         try:
-            temp_file = f"{DATA_FILE}.tmp"
-            with open(temp_file, 'w') as f:
-                json.dump(self.domains, f, indent=2)
-            
-            # Reemplazar archivo de manera segura
-            os.replace(temp_file, DATA_FILE)
-            self.add_log("💾 Dominios guardados correctamente")
+            with self.file_lock:
+                temp_file = f"{DATA_FILE}.tmp"
+                with open(temp_file, 'w') as f:
+                    json.dump(self.domains, f, indent=2)
+                
+                # Reemplazar archivo de manera segura
+                os.replace(temp_file, DATA_FILE)
+                self.add_log("💾 Dominios guardados correctamente")
         except Exception as e:
             self.add_log(f"❌ Error al guardar data.json: {e}")
 
     def load_domains(self):
         """Carga los dominios desde un archivo JSON de manera optimizada"""
         try:
-            if os.path.exists(DATA_FILE):
-                with open(DATA_FILE, 'r') as f:
-                    self.domains = json.load(f)
-                self.add_log("📂 Dominios cargados correctamente")
-            else:
-                self.add_log("⚠️ data.json no encontrado, iniciando con lista vacía")
+            with self.file_lock:
+                if os.path.exists(DATA_FILE):
+                    with open(DATA_FILE, 'r') as f:
+                        self.domains = json.load(f)
+                    self.add_log("📂 Dominios cargados correctamente")
+                else:
+                    self.add_log("⚠️ data.json no encontrado, iniciando con lista vacía")
         except Exception as e:
             self.add_log(f"❌ Error al cargar data.json: {e}")
             self.domains = {}
@@ -371,8 +373,8 @@ class DomainMonitor:
                     x509 = crypto.load_certificate(crypto.FILETYPE_ASN1, cert_binary)
 
                     # Calcular fechas una sola vez
-                    now = datetime.now()
-                    expiry_date = datetime.strptime(
+                    now = dt.datetime.now()
+                    expiry_date = dt.datetime.strptime(
                         x509.get_notAfter().decode(), 
                         '%Y%m%d%H%M%SZ'
                     )
@@ -381,7 +383,7 @@ class DomainMonitor:
                         'status': 'Online',
                         'has_ssl': True,
                         'common_name': dict(x509.get_subject().get_components()).get(b'CN', b'').decode(),
-                        'valid_from': datetime.strptime(
+                        'valid_from': dt.datetime.strptime(
                             x509.get_notBefore().decode(), 
                             '%Y%m%d%H%M%SZ'
                         ).strftime('%d/%m/%Y'),
@@ -402,7 +404,7 @@ class DomainMonitor:
                 'status': 'Offline',
                 'has_ssl': False,
                 'error': 'Timeout al conectar',
-                'last_check': datetime.now().strftime('%H:%M:%S')
+                        'last_check': dt.datetime.now().strftime('%H:%M:%S')
             }
         except ssl.SSLError as e:
             logger.warning(f"Error SSL al verificar certificado para {domain}: {str(e)}")
@@ -410,7 +412,7 @@ class DomainMonitor:
                 'status': 'Offline',
                 'has_ssl': False,
                 'error': f'Error SSL: {str(e)}',
-                'last_check': datetime.now().strftime('%H:%M:%S')
+                'last_check': dt.datetime.now().strftime('%H:%M:%S')
             }
         except Exception as e:
             logger.error(f"Error inesperado al verificar certificado para {domain}: {str(e)}")
@@ -418,7 +420,7 @@ class DomainMonitor:
                 'status': 'Offline',
                 'has_ssl': False,
                 'error': str(e),
-                'last_check': datetime.now().strftime('%H:%M:%S')
+                'last_check': dt.datetime.now().strftime('%H:%M:%S')
             }
 
     def start_domain_updater(self):
@@ -466,7 +468,7 @@ class DomainMonitor:
                             self.domains[domain] = {
                                 'status': 'Error',
                                 'error': str(e),
-                                'last_check': datetime.datetime.now().strftime('%H:%M:%S')
+                                'last_check': dt.datetime.now().strftime('%H:%M:%S')
                             }
 
             # Guardar en archivo solo si hubo cambios

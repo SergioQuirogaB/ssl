@@ -11,6 +11,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.32/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.6);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .pulse-dot {
+            animation: pulse 1.2s ease-in-out infinite;
+            box-shadow: 0 0 8px rgba(132, 204, 22, 0.7);
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
 
@@ -38,7 +59,7 @@
                 <div class="flex flex-col items-end space-y-2">
                     <div class="flex items-center space-x-4">
                         <span class="flex items-center bg-blue-900 bg-opacity-50 text-blue-100 px-3 py-1 rounded-full text-sm">
-                            <span class="w-2 h-2 rounded-full bg-lime-400 mr-2"></span>
+                            <span class="w-2 h-2 rounded-full bg-lime-400 mr-2 pulse-dot"></span>
                             Monitoreo activo
                         </span>
                     </div>
@@ -81,10 +102,13 @@
                     </button>
                 </div>                
             </div>
-            <div>
-                <button class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2" onclick="downloadReport()">
+            <div class="flex gap-2">
+                <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2" onclick="downloadReport()">
                    <strong>📄 PDF</strong>
-                </button>                
+                </button>
+                <button class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-md transition duration-200 flex items-center gap-2" onclick="openLogsModal()">
+                    <strong>📋 LOG</strong>
+                </button>
             </div>
         </div>
 
@@ -128,12 +152,41 @@
         </div>
     </div>
 
+    <!-- Modal de logs -->
+    <div id="logsModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-40 backdrop-blur-sm">
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl border border-gray-200">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-gray-400">Monitor</p>
+                        <h3 class="text-lg font-semibold text-gray-800">Logs del sistema</h3>
+                    </div>
+                    <button onclick="closeLogsModal()" class="text-gray-400 hover:text-gray-600 transition">✕</button>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-sm text-gray-500">Últimos eventos registrados</span>
+                        <button class="text-sm text-blue-600 hover:text-blue-800 font-medium" onclick="refreshLogs()">Actualizar</button>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg bg-gray-50">
+                        <div id="logsContent" class="max-h-80 overflow-y-auto divide-y divide-gray-200">
+                            <div class="p-6 text-center text-gray-400 text-sm">Cargando...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200">
+                    <button class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition" onclick="closeLogsModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-white border-t border-gray-200">
         <div class="container mx-auto px-5 py-8">
             <div class="flex flex-col sm:flex-row items-center">
                 <p class="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">
                     © <span id="currentYear"></span> <a href="https://koncilia.com" class="text-blue-900 hover:text-blue-700 transition-colors" target="_blank"><strong><span class="text-sky-500">K</span>oncilia</strong></a> —
-                    <a href="https://github.com/SergioQuirogaB" class="text-gray-600 ml-1 hover:text-blue-600 transition-colors" rel="noopener noreferrer" target="_blank">Versión. 4.0</a>
+                    <a href="https://github.com/SergioQuirogaB" class="text-gray-600 ml-1 hover:text-blue-600 transition-colors" rel="noopener noreferrer" target="_blank">Versión. 4.1.0</a>
                 </p>
             </div>
         </div>
@@ -142,6 +195,64 @@
     <script>
         // Variable global para almacenar los datos de dominios
         let domainsData = {};
+        let logsInterval = null;
+
+        function openLogsModal() {
+            const modal = document.getElementById('logsModal');
+            modal.classList.remove('hidden');
+            refreshLogs();
+            if (!logsInterval) {
+                logsInterval = setInterval(refreshLogs, 15000);
+            }
+        }
+
+        function closeLogsModal() {
+            const modal = document.getElementById('logsModal');
+            modal.classList.add('hidden');
+            if (logsInterval) {
+                clearInterval(logsInterval);
+                logsInterval = null;
+            }
+        }
+
+        function refreshLogs() {
+            const content = document.getElementById('logsContent');
+            content.innerHTML = '<div class="p-6 text-center text-gray-400 text-sm">Cargando...</div>';
+            fetch('/api/logs')
+                .then(response => response.json())
+                .then(renderLogs)
+                .catch(error => {
+                    console.error('Error fetching logs:', error);
+                    content.innerHTML = '<div class="p-6 text-center text-red-500 text-sm">Error al cargar los logs</div>';
+                });
+        }
+
+        function renderLogs(logs) {
+            const content = document.getElementById('logsContent');
+            content.innerHTML = '';
+
+            if (!logs || !logs.length) {
+                content.innerHTML = '<div class="p-6 text-center text-gray-400 text-sm">Sin eventos registrados</div>';
+                return;
+            }
+
+            logs.slice().reverse().forEach(log => {
+                const item = document.createElement('div');
+                item.className = 'p-4 flex items-start gap-3 bg-white';
+
+                const time = document.createElement('span');
+                time.className = 'text-xs font-mono text-gray-500';
+                time.textContent = log.timestamp || '--';
+
+                const message = document.createElement('p');
+                message.className = 'text-sm text-gray-800 flex-1';
+                message.textContent = log.message || '';
+
+                item.appendChild(time);
+                item.appendChild(message);
+                content.appendChild(item);
+            });
+        }
 
         function updateDomainList() {
             fetch('/api/get_domains')
@@ -266,7 +377,7 @@
                                 value="${savedNotes[domain] || info.note || ''}"
                             />
                         </td>
-                        <td class="p-4 align-middle">
+                        <td class="p-4 align-middle flex items-center justify-center">
                             <button onclick="confirmDelete('${domain}')" aria-label="Eliminar" class="hover:opacity-75 transition-opacity">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> 
                                     <polyline points="3 6 5 6 21 6"></polyline> 
